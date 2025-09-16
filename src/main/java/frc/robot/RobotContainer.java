@@ -9,15 +9,12 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.autos.DriveForwardAuto;
 import frc.robot.commands.AlgaeInCommand;
 import frc.robot.commands.AlgaeOutCommand;
-//import frc.robot.commands.ArmDownCommand;
-//import frc.robot.commands.ArmUpCommand;
-//import frc.robot.commands.ClimberDownCommand;
-//import frc.robot.commands.ClimberUpCommand;
+import frc.robot.commands.ArmDownCommand;
+import frc.robot.commands.ArmUpCommand;
 import frc.robot.commands.CoralOutCommand;
 import frc.robot.commands.CoralStackCommand;
 import frc.robot.commands.DriveCommand;
-//import frc.robot.subsystems.ArmSubsystem;
-//import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.RollerSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -48,10 +45,8 @@ public class RobotContainer {
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   public final RollerSubsystem m_roller = new RollerSubsystem();
-  //public final ArmSubsystem m_arm = new ArmSubsystem();
+  public final ArmSubsystem m_arm = new ArmSubsystem();
   public final DriveSubsystem m_drive = new DriveSubsystem();
-  //public final ClimberSubsystem m_climber = new ClimberSubsystem();
-
  
   public final DriveForwardAuto m_driveForwardAuto = new DriveForwardAuto(m_drive);
 
@@ -105,6 +100,16 @@ public class RobotContainer {
         () -> true));
 
     /**
+     * The arm will be passively held up or down after this is used,
+     * make sure not to run the arm too long or it may get upset!
+     */
+    // Arm up on B
+    m_operatorController.b().whileTrue(new ArmUpCommand(m_arm));
+
+    // Arm down on A
+    m_operatorController.a().whileTrue(new ArmDownCommand(m_arm));
+
+    /**
      * Here we declare all of our operator commands, these commands could have been
      * written in a more compact manner but are left verbose so the intent is clear.
      */
@@ -113,13 +118,7 @@ public class RobotContainer {
     // Here we use a trigger as a button when it is pushed past a certain threshold
     m_operatorController.rightTrigger(.2).whileTrue(new AlgaeOutCommand(m_roller));
 
-    /**
-     * The arm will be passively held up or down after this is used,
-     * make sure not to run the arm too long or it may get upset!
-     */
-    //m_operatorController.leftBumper().whileTrue(new ArmUpCommand(m_arm));
-    //m_operatorController.leftTrigger(.2).whileTrue(new ArmDownCommand(m_arm));
-
+    
     /**
      * Used to score coral, the stack command is for when there is already coral
      * in L1 where you are trying to score. The numbers may need to be tuned, 
@@ -140,14 +139,12 @@ public class RobotContainer {
           )
       );
     m_operatorController.y().whileTrue(new CoralStackCommand(m_roller));
+  }
 
     /**
      * POV is a direction on the D-Pad or directional arrow pad of the controller,
      * the direction of this will be different depending on how your winch is wound
      */
-    // m_operatorController.pov(0).whileTrue(new ClimberUpCommand(m_climber));
-    // m_operatorController.pov(180).whileTrue(new ClimberDownCommand(m_climber));
-  }
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
@@ -157,5 +154,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
     // The selected command will be run in autonomous
     return m_chooser.getSelected();
+
   }
 }

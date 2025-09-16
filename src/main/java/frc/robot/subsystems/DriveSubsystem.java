@@ -1,4 +1,3 @@
-
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -57,16 +56,22 @@ public class DriveSubsystem extends SubsystemBase {
     // Set configuration to follow leader and then apply it to corresponding
     // follower. Resetting in case a new controller is swapped
     // in and persisting in case of a controller reset due to breaker trip
+    
+    // LEFT SIDE CONFIGURATION
     config.follow(leftLeader);
     leftFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+    // RIGHT SIDE CONFIGURATION
     config.follow(rightLeader);
     rightFollower.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-    // Remove following, then apply config to right leader
+    // Apply the common configuration to the leader motors as well.
+    // We disable follower mode here as a good practice before applying to leaders.
     config.disableFollowerMode();
     rightLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    // Set conifg to inverted and then apply to left leader. Set Left side inverted
-    // so that postive values drive both sides forward
+
+    // Set config to inverted and then apply to left leader. Set Left side inverted
+    // so that positive values drive both sides forward.
     config.inverted(true);
     leftLeader.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
   }
@@ -76,7 +81,7 @@ public class DriveSubsystem extends SubsystemBase {
   }
 
   public void driveArcade(double xSpeed, double zRotation, boolean squared) {
-    drive.arcadeDrive(xSpeed, zRotation, squared);
+    drive.arcadeDrive(-xSpeed, -zRotation, squared);
   }
 
   // Command to drive the robot with joystick inputs
@@ -84,5 +89,5 @@ public class DriveSubsystem extends SubsystemBase {
       DriveSubsystem driveSubsystem, DoubleSupplier xSpeed, DoubleSupplier zRotation) {
     return Commands.run(
         () -> drive.arcadeDrive(xSpeed.getAsDouble(), zRotation.getAsDouble()), driveSubsystem);
-    }
+  }
 }
