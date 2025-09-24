@@ -29,7 +29,7 @@ public class RollerSubsystem extends SubsystemBase {
     rollerMotor = new VictorSPX(13);
             // Configure basic settings
             rollerMotor.configFactoryDefault(); // Reset to factory defaults
-            rollerMotor.setInverted(false); // Change to true if motor runs in the wrong direction
+            rollerMotor.setInverted(true); // Change to true if motor runs in the wrong direction
 
     // Set can timeout. Because this project only sets parameters once on
     // construction, the timeout can be long without blocking robot operation. Code
@@ -50,37 +50,39 @@ public class RollerSubsystem extends SubsystemBase {
   public void periodic() {
   }
 
+  //single method to run the roller using commands
+
   public void runRoller(double speed){
-    rollerMotor.set(ControlMode.PercentOutput, 1);
+    rollerMotor.set(ControlMode.PercentOutput, speed);
   }
 
-  public void reverseRoller(double speed){
-  rollerMotor.set(ControlMode.PercentOutput, (-0.4));
-  }
+  // public void reverseRoller(double speed){
+  // rollerMotor.set(ControlMode.PercentOutput, (-0.4));
+  // }
 
-  public void stopRoller(){
-  rollerMotor.set(ControlMode.PercentOutput, 0.0);
-  }
+  // public void stopRoller(){
+  // rollerMotor.set(ControlMode.PercentOutput, 0.0);
+  // }
 
-  public Command runRoller(RollerSubsystem rollerSubsystem, DoubleSupplier forward, DoubleSupplier reverse) {
-    return Commands.run(
-        () -> {
-            // Get the current values from the forward and reverse inputs
-            double forwardSpeed = forward.getAsDouble();
-            double reverseSpeed = reverse.getAsDouble();
+  // public Command runRoller(RollerSubsystem rollerSubsystem, DoubleSupplier forward, DoubleSupplier reverse) {
+  //   return Commands.run(
+  //       () -> {
+  //           // Get the current values from the forward and reverse inputs
+  //           double forwardSpeed = forward.getAsDouble();
+  //           double reverseSpeed = reverse.getAsDouble();
 
-            // Calculate the motor speed based on the input values.
-            // If forward and reverse are both zero, stop the motor.
-            double speed = forwardSpeed - reverseSpeed;
+  //           // Calculate the motor speed based on the input values.
+  //           // If forward and reverse are both zero, stop the motor.
+  //           double speed = forwardSpeed - reverseSpeed;
             
-            // Only set the motor if the speed is non-zero, otherwise stop the motor
-            if (speed != 0) {
-                rollerMotor.set(ControlMode.PercentOutput, speed);
-            } else {
-                rollerMotor.set(ControlMode.PercentOutput, 0); // Stop the motor if no input
-            }
-        }, 
-        rollerSubsystem
-    );
-  }
+  //           // Only set the motor if the speed is non-zero, otherwise stop the motor
+  //           if (speed != 0) {
+  //               rollerMotor.set(ControlMode.PercentOutput, speed);
+  //           } else {
+  //               rollerMotor.set(ControlMode.PercentOutput, 0); // Stop the motor if no input
+  //           }
+  //       }, 
+  //       rollerSubsystem
+  //   );
+  // }
 }  

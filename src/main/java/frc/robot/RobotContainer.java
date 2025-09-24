@@ -104,10 +104,10 @@ public class RobotContainer {
      * make sure not to run the arm too long or it may get upset!
      */
     // Arm up on B
-    m_operatorController.b().whileTrue(new ArmUpCommand(m_arm));
+    m_operatorController.leftBumper().whileTrue(new ArmUpCommand(m_arm));
 
     // Arm down on A
-    m_operatorController.a().whileTrue(new ArmDownCommand(m_arm));
+    m_operatorController.leftTrigger(.2).whileTrue(new ArmDownCommand(m_arm));
 
     /**
      * Here we declare all of our operator commands, these commands could have been
@@ -124,23 +124,12 @@ public class RobotContainer {
      * in L1 where you are trying to score. The numbers may need to be tuned, 
      * make sure the rollers do not wear on the plastic basket.
      */
-     m_operatorController.x().whileTrue(
-            // Run the roller forward when the X button is held down
-            Commands.run(
-                () -> m_roller.runRoller(1.0), // Run the roller at full forward speed
-                m_roller
-            )
-        );
-     m_operatorController.x().whileFalse(
-          // Stop the roller when the X button is released
-          Commands.run(
-              () -> m_roller.stopRoller(),
-              m_roller
-          )
-      );
+     m_operatorController.x().whileTrue(new CoralOutCommand(m_roller));
+
     m_operatorController.y().whileTrue(new CoralStackCommand(m_roller));
   }
 
+  
     /**
      * POV is a direction on the D-Pad or directional arrow pad of the controller,
      * the direction of this will be different depending on how your winch is wound
